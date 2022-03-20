@@ -11,13 +11,12 @@ function loadFile(url, callback) {
 
 const App = () => {
   const generateDocument = (item) => {
-    loadFile("FilesTemplate.docx", function (error, content) {
+    loadFile("http://127.0.0.1:8080/Template.docx", function (error, content) {
       try {
         if (error) {
           throw error;
         }
         const zip = new PizZip(content);
-        console.log(content);
         const doc = new DocxTemplater(zip, {
           paragraphLoop: true,
           linebreaks: true,
@@ -29,7 +28,7 @@ const App = () => {
           mimeType:
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         });
-        saveAs(out, "output.docx");
+        saveAs(out, `${item[1]}.docx`);
       } catch (e) {
         console.log(e.message);
       }
@@ -47,7 +46,7 @@ const App = () => {
       const ws = wb.Sheets[wsName];
       const list = utils.sheet_to_json(ws, { header: 1 });
       console.log(list);
-      generateDocument();
+      list.forEach(generateDocument);
     };
     reader.readAsBinaryString(file);
   };
